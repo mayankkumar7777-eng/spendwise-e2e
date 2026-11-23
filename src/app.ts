@@ -130,8 +130,10 @@ export async function buildApp(options: AppOptions) {
     reply.header('referrer-policy', 'no-referrer');
     reply.header('cross-origin-resource-policy', 'same-origin');
     reply.header('cross-origin-opener-policy', 'same-origin');
+    reply.header('cross-origin-embedder-policy', 'require-corp');
     reply.header('permissions-policy', 'camera=(), microphone=(), geolocation=()');
-    reply.header('cache-control', 'no-store');
+    // Static assets set their own revalidating policy; everything else stays uncacheable.
+    if (!reply.hasHeader('cache-control')) reply.header('cache-control', 'no-store');
     reply.removeHeader('x-powered-by');
   });
 
@@ -160,7 +162,9 @@ export async function buildApp(options: AppOptions) {
   app.get('/health', health);
 
   for (const [url, file] of staticFiles) {
-    app.get(url, async (_request, reply) => reply.header('content-type', file.type).send(file.body));
+    app.get(url, async (_request, reply) =>
+      reply.header('content-type', file.type).header('cache-control', 'no-cache').send(file.body),
+    );
   }
 
   app.post('/api/auth/login', async (request, reply) => {
