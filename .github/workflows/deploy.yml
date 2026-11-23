@@ -1,0 +1,13 @@
+name: Deploy
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  deployments: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment || 'staging' }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Configure a deployment target and secrets before enabling this workflow."

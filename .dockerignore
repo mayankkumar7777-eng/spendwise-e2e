@@ -1,0 +1,10 @@
+node_modules
+dist
+data
+reports
+coverage
+.test-data
+.npm-cache
+.tmp
+.env
+.git
