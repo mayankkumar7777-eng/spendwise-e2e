@@ -129,6 +129,7 @@ export async function buildApp(options: AppOptions) {
     reply.header('x-content-type-options', 'nosniff');
     reply.header('referrer-policy', 'no-referrer');
     reply.header('cross-origin-resource-policy', 'same-origin');
+    reply.header('cross-origin-opener-policy', 'same-origin');
     reply.header('permissions-policy', 'camera=(), microphone=(), geolocation=()');
     reply.header('cache-control', 'no-store');
     reply.removeHeader('x-powered-by');
