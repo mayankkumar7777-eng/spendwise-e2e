@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { createHash, randomBytes } from 'node:crypto';
 import type { Db } from './db.js';
 import { AppError, unauthenticated, validationFailed } from './errors.js';
