@@ -82,8 +82,8 @@ jobs:
           node-version: 22
       - run: npm install --no-audit --no-fund
       - run: npm audit --json > reports-npm-audit.json || true
-      - run: mkdir -p reports
-      - run: docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep:1.100.0 scan --config auto --sarif --output /src/reports/semgrep.sarif /src || true
+      - run: mkdir -p reports && chmod 777 reports
+      - run: docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep:1.100.0 semgrep scan --config auto --sarif --output /src/reports/semgrep.sarif /src || true
       - run: docker run --rm -v "${{ github.workspace }}:/src" zricethezav/gitleaks:v8.24.2 detect --source=/src --no-git --report-format=json --report-path=/src/reports/gitleaks.json || true
       - run: docker run --rm -v "${{ github.workspace }}:/src" aquasec/trivy:0.58.0 fs --format sarif --output /src/reports/trivy.sarif --exit-code 0 /src
       - run: npm run build
