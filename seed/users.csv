@@ -1,0 +1,10 @@
+email,name,role,manager_email
+sanjay.gupta@spendwise.example,Sanjay Gupta,Manager,
+priya.nair@spendwise.example,Priya Nair,Manager,sanjay.gupta@spendwise.example
+rahul.mehta@spendwise.example,Rahul Mehta,Manager,sanjay.gupta@spendwise.example
+anita.desai@spendwise.example,Anita Desai,Finance,sanjay.gupta@spendwise.example
+amit.sharma@spendwise.example,Amit Sharma,Employee,priya.nair@spendwise.example
+neha.kapoor@spendwise.example,Neha Kapoor,Employee,priya.nair@spendwise.example
+arjun.rao@spendwise.example,Arjun Rao,Employee,priya.nair@spendwise.example
+vikram.singh@spendwise.example,Vikram Singh,Employee,rahul.mehta@spendwise.example
+sneha.iyer@spendwise.example,Sneha Iyer,Employee,rahul.mehta@spendwise.example

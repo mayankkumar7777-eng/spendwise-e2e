@@ -1,0 +1,109 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: forgeflow-unit
+          path: |
+            reports/unit.xml
+            coverage/coverage-summary.json
+          if-no-files-found: warn
+
+  functional:
+    needs: unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: mkdir -p reports && npm run test:functional
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: forgeflow-functional
+          path: reports/
+          if-no-files-found: warn
+
+  load:
+    needs: functional
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - run: |
+          SEED_DEMO_DATA=true npm start > /tmp/forgeflow-app.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/health; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/forgeflow-app.log
+          exit 1
+      - uses: grafana/setup-k6-action@v1
+      - run: mkdir -p reports && BASE_URL=http://127.0.0.1:3000 k6 run load-test.js
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: forgeflow-load
+          path: reports/k6-summary.json
+          if-no-files-found: warn
+
+  security:
+    needs: load
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm audit --json > reports-npm-audit.json || true
+      - run: mkdir -p reports && chmod 777 reports
+      - run: docker run --rm -v "${{ github.workspace }}:/src" semgrep/semgrep:1.100.0 semgrep scan --config auto --sarif --output /src/reports/semgrep.sarif /src || true
+      - run: docker run --rm -v "${{ github.workspace }}:/src" zricethezav/gitleaks:v8.24.2 detect --source=/src --no-git --report-format=json --report-path=/src/reports/gitleaks.json || true
+      - run: docker run --rm -v "${{ github.workspace }}:/src" aquasec/trivy:0.58.0 fs --format sarif --output /src/reports/trivy.sarif --exit-code 0 /src
+      - run: npm run build
+      - run: |
+          npm start > /tmp/forgeflow-app.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/health; then exit 0; fi
+            sleep 2
+          done
+          cat /tmp/forgeflow-app.log
+          exit 1
+      - uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: http://127.0.0.1:3000
+          cmd_options: -J reports/zap-baseline.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: forgeflow-security
+          path: |
+            reports/
+            reports-npm-audit.json
+          if-no-files-found: warn

@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    ports:
+      - "4100:4100"
+    environment:
+      HOST: 0.0.0.0
+      PORT: "4100"
+      DATA_DIR: /app/data
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+    volumes:
+      - spendwise-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  spendwise-data:

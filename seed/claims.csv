@@ -1,0 +1,15 @@
+id,employee_email,date,category,amount,description,status,decided_by,decided_at,comment
+CLM-0001,amit.sharma@spendwise.example,2026-09-03,Meals,350.00,Team lunch with client,Approved,system,2026-09-03T04:00:00.000Z,
+CLM-0002,amit.sharma@spendwise.example,2026-09-10,Travel,4200.50,Flight to Pune for workshop,Approved,priya.nair@spendwise.example,2026-09-11T05:30:00.000Z,
+CLM-0003,neha.kapoor@spendwise.example,2026-09-15,Lodging,7800.00,Hotel in Chennai - two nights,Approved,priya.nair@spendwise.example,2026-09-16T06:00:00.000Z,
+CLM-0004,neha.kapoor@spendwise.example,2026-09-20,Office Supplies,1250.00,Printer cartridges and notebooks,Rejected,priya.nair@spendwise.example,2026-09-21T07:00:00.000Z,Please attach a receipt and resubmit
+CLM-0005,arjun.rao@spendwise.example,2026-10-02,Internet & Phone,899.00,Monthly broadband reimbursement,Approved,priya.nair@spendwise.example,2026-10-03T05:00:00.000Z,
+CLM-0006,vikram.singh@spendwise.example,2026-10-08,Training,15000.00,Online cloud certification course,Approved,rahul.mehta@spendwise.example,2026-10-09T05:00:00.000Z,
+CLM-0007,vikram.singh@spendwise.example,2026-10-14,Meals,480.00,चाय और नाश्ता - client meeting,Approved,system,2026-10-14T04:00:00.000Z,
+CLM-0008,sneha.iyer@spendwise.example,2026-10-21,Travel,2650.00,"Taxi to airport, return trip",Approved,rahul.mehta@spendwise.example,2026-10-22T05:00:00.000Z,
+CLM-0009,sneha.iyer@spendwise.example,2026-11-05,Lodging,9200.00,Hotel in Delhi for conference,Submitted,,,
+CLM-0010,amit.sharma@spendwise.example,2026-11-09,Office Supplies,1899.00,Ergonomic keyboard,Submitted,,,
+CLM-0011,arjun.rao@spendwise.example,2026-11-12,Meals,1450.00,Dinner with vendor team,Submitted,,,
+CLM-0012,priya.nair@spendwise.example,2026-11-13,Travel,5400.00,Train tickets to Mumbai offsite,Submitted,,,
+CLM-0013,rahul.mehta@spendwise.example,2026-11-16,Training,12000.00,Leadership workshop fee,Submitted,,,
+CLM-0014,neha.kapoor@spendwise.example,2026-11-18,Internet & Phone,450.00,Mobile data pack,Approved,system,2026-11-18T04:00:00.000Z,
