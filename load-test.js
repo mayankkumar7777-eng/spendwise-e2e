@@ -5,6 +5,9 @@ import { check } from 'k6';
 export const options = {
   vus: 50,
   duration: '30s',
+  // k6 clears each VU's cookie jar between iterations by default, which would drop the session
+  // cookie while `loggedIn` stays true; keep cookies so the one-time login is reused.
+  noCookiesReset: true,
   thresholds: {
     http_req_duration: ['p(95)<500'],
     http_req_failed: ['rate<0.01'],
