@@ -21,6 +21,10 @@ const USERS = [
 ];
 const FINANCE = 'anita.desai@spendwise.example';
 
+// Per-VU state survives across iterations: users log in once and reuse the session cookie
+// (sessions last 30 minutes), instead of paying the deliberate bcrypt cost (>= 12) on every iteration.
+let loggedIn = false;
+
 function login(email) {
   const res = http.post(
     `${__ENV.BASE_URL}/api/auth/login`,
@@ -28,17 +32,18 @@ function login(email) {
     { headers: { 'Content-Type': 'application/json' } },
   );
   check(res, { 'login ok': (r) => r.status === 200 });
+  loggedIn = res.status === 200;
 }
 
 export default function () {
   const base = __ENV.BASE_URL;
   if (__VU % 5 === 0) {
-    login(FINANCE);
+    if (!loggedIn) login(FINANCE);
     const report = http.get(`${base}/api/reports/monthly?month=2026-09`);
     check(report, { 'report ok': (r) => r.status === 200 });
     return;
   }
-  login(USERS[__VU % USERS.length]);
+  if (!loggedIn) login(USERS[__VU % USERS.length]);
   const list = http.get(`${base}/api/claims?page=1`);
   check(list, { 'list ok': (r) => r.status === 200 });
   // Each iteration uses a distinct amount/description so the duplicate rule does not fire.
